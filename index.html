@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Codex重置提醒 · 非官方 Codex 额度重置状态</title>
+  <meta name="description" content="非官方 Codex 使用额度全局重置公开信号：预告 / 已落地分档展示。不隶属于 OpenAI。" />
+  <meta name="theme-color" content="#0b0f14" />
+  <meta property="og:title" content="Codex重置提醒" />
+  <meta property="og:description" content="非官方 Codex 额度全局重置状态页：预告 / 已落地分档。" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⏰</text></svg>" />
+  <style>
+    :root {
+      --bg: #0b0f14; --card: #141a22; --text: #e8eef6; --muted: #8b9bb0;
+      --accent: #5b9fd4; --landed: #3ecf8e; --preview: #e6b84d; --border: #243041;
+    }
+    * { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+      background: var(--bg); color: var(--text); line-height: 1.6;
+      padding: 24px 16px calc(64px + env(safe-area-inset-bottom));
+    }
+    main { max-width: 680px; margin: 0 auto; }
+    h1 { font-size: 1.55rem; font-weight: 700; margin: 0 0 4px; letter-spacing: 0.02em; }
+    h2 { font-size: 1rem; margin: 0 0 10px; }
+    .sub { color: var(--muted); font-size: 0.9rem; margin: 0 0 20px; }
+    .grid { display: grid; grid-template-columns: 1fr; gap: 14px; margin-bottom: 14px; }
+    @media (min-width: 600px) { .grid { grid-template-columns: 1fr 1fr; } }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; margin-bottom: 14px; }
+    .grid .card { margin-bottom: 0; }
+    .card.landed { border-left: 4px solid var(--landed); }
+    .card.preview { border-left: 4px solid var(--preview); }
+    .label { font-size: 0.78rem; letter-spacing: 0.04em; color: var(--muted); margin-bottom: 6px; }
+    .big-time { font-size: 1.45rem; font-weight: 700; margin: 0 0 4px; word-break: break-word; }
+    .ago { color: var(--muted); font-size: 0.85rem; }
+    .meta { color: var(--muted); font-size: 0.84rem; word-break: break-word; }
+    .summary { margin: 8px 0 0; font-size: 0.94rem; }
+    .badge { display: inline-block; font-size: 0.72rem; font-weight: 600; padding: 2px 8px; border-radius: 999px; vertical-align: middle; }
+    .badge.landed { background: rgba(62,207,142,0.15); color: var(--landed); }
+    .badge.preview { background: rgba(230,184,77,0.15); color: var(--preview); }
+    ul.signals { list-style: none; padding: 0; margin: 0; }
+    ul.signals li { border-top: 1px solid var(--border); padding: 12px 0; }
+    ul.signals li:first-child { border-top: none; padding-top: 0; }
+    ul.plain { margin: 0; padding-left: 1.2em; }
+    ul.plain li { margin: 4px 0; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .btn { display: inline-block; background: var(--accent); color: #07121d; font-weight: 700; padding: 10px 16px; border-radius: 10px; margin-top: 10px; }
+    .btn:hover { text-decoration: none; filter: brightness(1.1); }
+    .note { font-size: 0.82rem; color: var(--muted); margin-top: 10px; }
+    .disclaimer { margin-top: 24px; font-size: 0.8rem; color: var(--muted); border-top: 1px solid var(--border); padding-top: 14px; }
+    .err { color: #f07178; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>⏰ Codex重置提醒</h1>
+    <p class="sub">Codex 使用额度「全局重置」公开信号追踪 · 预告 / 已落地分档 · 非官方</p>
+
+    <div class="grid">
+      <section class="card landed">
+        <div class="label"><span class="badge landed">已落地</span> 最近一次确认重置</div>
+        <p class="big-time" id="landed-time">加载中…</p>
+        <div class="ago" id="landed-ago"></div>
+        <div class="meta" id="landed-meta"></div>
+        <p class="summary" id="landed-summary"></p>
+      </section>
+      <section class="card preview">
+        <div class="label"><span class="badge preview">预告</span> 最近一次预告</div>
+        <p class="big-time" id="preview-time">加载中…</p>
+        <div class="ago" id="preview-ago"></div>
+        <div class="meta" id="preview-meta"></div>
+        <p class="summary" id="preview-summary"></p>
+      </section>
+    </div>
+
+    <section class="card">
+      <h2>事件记录</h2>
+      <ul class="signals" id="recent"><li class="meta">加载中…</li></ul>
+    </section>
+
+    <section class="card">
+      <h2>「预告」和「已落地」有什么区别？</h2>
+      <ul class="plain">
+        <li><span class="badge preview">预告</span> OpenAI 相关人员（如 <a href="https://x.com/thsottiaux" target="_blank" rel="noopener">@thsottiaux</a>）公开表示<strong>将要</strong>重置，但尚未确认已执行。可能延迟或变化。</li>
+        <li><span class="badge landed">已落地</span> 公开表述明确重置<strong>已经执行</strong>，或公开监测站确认新的重置时间并与帖文交叉一致。</li>
+        <li>你个人额度突然回满不一定是全局重置（可能只是账户自身的滚动周期）。不确定时我们只标「预告」。</li>
+      </ul>
+    </section>
+
+    <section class="card" id="waitlist">
+      <h2>🔔 付费即时提醒即将开放</h2>
+      <p style="margin:0">计划在「已落地」时第一时间邮件通知（仅已落地，不推送预告，减少误报）。目前<strong>尚未开放、不收取任何费用</strong>。</p>
+      <p style="margin:8px 0 0">想开放时收到通知？点下方按钮在 GitHub 上登记（需 GitHub 账号，免费）：</p>
+      <a class="btn" id="waitlist-btn" href="https://github.com/dddnotai/codex-reset/issues/new?template=waitlist.yml&labels=waitlist&title=%5BWaitlist%5D+%E4%BB%98%E8%B4%B9%E6%8F%90%E9%86%92%E7%99%BB%E8%AE%B0" target="_blank" rel="noopener">加入候补名单 →</a>
+      <p class="note">⚠️ GitHub Issue 是<strong>公开可见</strong>的，请不要在其中填写邮箱等个人信息；登记后我们会在开放时通过 GitHub 通知你（回复该 Issue）。</p>
+    </section>
+
+    <p class="disclaimer" id="disclaimer">非官方、非 OpenAI 关联。本页整理公开帖文与监测站信号，不保证你的 Codex/ChatGPT 账户额度已恢复。</p>
+    <p class="disclaimer" style="margin-top:6px;border:0;padding:0;">Unofficial. Not affiliated with or endorsed by OpenAI. “Codex” and “OpenAI” are trademarks of OpenAI.</p>
+    <p class="disclaimer" id="updated" style="margin-top:6px;border:0;padding:0;"></p>
+  </main>
+  <script>
+    function esc(s) {
+      return String(s == null ? "" : s)
+        .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+    }
+    function safeUrl(u) { return /^https:\/\//i.test(u || "") ? u : null; }
+    function ago(iso) {
+      if (!iso) return "";
+      var t = Date.parse(iso); if (isNaN(t)) return "";
+      var s = Math.round((Date.now() - t) / 1000), fut = s < 0; s = Math.abs(s);
+      var v = s < 3600 ? Math.max(1, Math.round(s / 60)) + " 分钟"
+            : s < 86400 ? Math.round(s / 3600) + " 小时"
+            : Math.round(s / 86400) + " 天";
+      return fut ? v + "后" : v + "前";
+    }
+    function fill(prefix, e, emptyText) {
+      var $ = function (id) { return document.getElementById(prefix + "-" + id); };
+      if (!e) { $("time").textContent = emptyText; return; }
+      var at = e.at || e.event_at;
+      $("time").textContent = e.at_shanghai || e.event_at_shanghai || at || "—";
+      $("ago").textContent = ago(at);
+      var url = safeUrl(e.post_url);
+      $("meta").innerHTML = "来源：" + esc(e.source || "—") +
+        (url ? " · <a href='" + esc(url) + "' target='_blank' rel='noopener'>原帖</a>" : "");
+      $("summary").textContent = e.summary_zh || "";
+    }
+    async function load() {
+      try {
+        var res = await fetch("./status.json?t=" + Date.now(), { cache: "no-store" });
+        if (!res.ok) throw new Error("status.json HTTP " + res.status);
+        var data = await res.json();
+        var recent = data.recent || [];
+        var lastLanded = data.last_landed || recent.find(function (e) { return e.tier === "landed"; });
+        var lastPreview = data.last_preview || recent.find(function (e) { return e.tier === "preview"; });
+        fill("landed", lastLanded, "暂无确认记录");
+        fill("preview", lastPreview, "暂无预告");
+        var ul = document.getElementById("recent");
+        ul.innerHTML = !recent.length ? "<li class='meta'>暂无信号</li>" : recent.map(function (e) {
+          var badge = e.tier === "landed"
+            ? "<span class='badge landed'>已落地</span>"
+            : "<span class='badge preview'>预告</span>";
+          var url = safeUrl(e.post_url);
+          var link = url ? " · <a href='" + esc(url) + "' target='_blank' rel='noopener'>原帖</a>" : "";
+          return "<li>" + badge +
+            " <strong style='margin-left:6px'>" + esc(e.event_at_shanghai || e.event_at) + "</strong>" +
+            " <span class='ago'>" + esc(ago(e.event_at)) + "</span>" +
+            "<div class='meta' style='margin-top:4px'>" + esc(e.source) + link + "</div>" +
+            "<div style='margin-top:6px'>" + esc(e.summary_zh) + "</div></li>";
+        }).join("");
+        if (data.disclaimer_zh) document.getElementById("disclaimer").textContent = data.disclaimer_zh;
+        document.getElementById("updated").textContent = "数据更新：" + (data.updated_at || "—") + "（北京时间）";
+      } catch (err) {
+        document.getElementById("landed-time").innerHTML = "<span class='err'>加载失败</span>";
+        document.getElementById("landed-meta").textContent = String(err);
+        document.getElementById("preview-time").textContent = "—";
+      }
+    }
+    load();
+    setInterval(load, 5 * 60 * 1000);
+  </script>
+</body>
+</html>
