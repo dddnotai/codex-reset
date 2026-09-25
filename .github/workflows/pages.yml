@@ -1,36 +1,25 @@
-name: Deploy GitHub Pages
+name: Mirror main to gh-pages
 
+# GitHub Pages for this repo is served from the gh-pages branch (root).
+# Every push to main is mirrored to gh-pages so updating status.json on main republishes the site.
 on:
   push:
     branches: [main]
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 concurrency:
-  group: pages
+  group: pages-mirror
   cancel-in-progress: true
 
 jobs:
-  deploy:
+  mirror:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
-      - name: Prepare site
-        run: |
-          mkdir -p _site
-          cp index.html status.json .nojekyll _site/
-      - uses: actions/configure-pages@v5
         with:
-          enablement: true
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: _site
-      - id: deployment
-        uses: actions/deploy-pages@v4
+          fetch-depth: 0
+      - name: Push main to gh-pages
+        run: git push origin HEAD:refs/heads/gh-pages --force
