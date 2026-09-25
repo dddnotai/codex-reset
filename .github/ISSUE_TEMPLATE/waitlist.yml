@@ -1,0 +1,39 @@
+name: 付费提醒候补登记 / Paid alert waitlist
+description: 付费即时提醒开放时通知我（目前免费登记，不收费） / Notify me when paid alerts open (free, no charge)
+title: "[Waitlist] 付费提醒登记"
+labels: ["waitlist"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢关注 **Codex重置提醒**！付费即时提醒（仅「已落地」时邮件通知）尚未开放，**现在不收取任何费用**。
+        开放时我们会在本 Issue 下回复，GitHub 会通知你。
+
+        ⚠️ **Issue 是公开的，请勿填写邮箱、手机号等个人信息。**
+
+        Thanks! Paid landed-only alerts are not open yet and **nothing is charged**. We'll reply on this issue when they open. **Issues are public — do not post your email or phone number.**
+  - type: dropdown
+    id: channel
+    attributes:
+      label: 希望的提醒方式 / Preferred channel
+      options:
+        - 邮件 / Email
+        - Telegram
+        - 微信 / WeChat
+        - 其他 / Other
+    validations:
+      required: false
+  - type: textarea
+    id: note
+    attributes:
+      label: 备注（可选） / Notes (optional)
+      description: 例如能接受的价格、希望的功能。请勿填写个人联系方式。 / e.g. acceptable price, features. No personal contact info.
+    validations:
+      required: false
+  - type: checkboxes
+    id: ack
+    attributes:
+      label: 确认 / Acknowledgement
+      options:
+        - label: 我知道本站非官方、与 OpenAI 无关，且目前不收费 / I understand this is unofficial, not affiliated with OpenAI, and currently free
+          required: true
