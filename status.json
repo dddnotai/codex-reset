@@ -1,6 +1,6 @@
 {
   "brand": "Codex重置提醒",
-  "updated_at": "2026-09-24T14:08:08+08:00",
+  "updated_at": "2026-09-26T09:04:38+08:00",
   "disclaimer_zh": "非官方、非 OpenAI 关联。本页整理公开帖文与监测站信号，不保证你的 Codex/ChatGPT 账户额度已恢复。付费邮件提醒开通后可退订（回复 UNSUBSCRIBE）。",
   "last_landed": {
     "at": "2026-09-12T08:09:00Z",
@@ -11,6 +11,16 @@
     "id": "20260912T0809Z-monitor-codexreset"
   },
   "recent": [
+    {
+      "id": "20260926T0007Z-thsottiaux-2103637477760311522",
+      "tier": "preview",
+      "tier_zh": "预告",
+      "event_at": "2026-09-26T00:07:13Z",
+      "event_at_shanghai": "2026-09-26 08:07 CST",
+      "source": "thsottiaux",
+      "post_url": "https://x.com/thsottiaux/status/2103637477760311522",
+      "summary_zh": "Tibo 称 Codex 已恢复，并将为所有付费用户重置 Codex 与 ChatGPT Work 用量额度；尚未见到落地确认。"
+    },
     {
       "id": "20260922T0431Z-thsottiaux-2102254445082116335",
       "tier": "preview",
